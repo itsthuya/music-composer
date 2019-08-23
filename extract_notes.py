@@ -22,7 +22,9 @@ def extract_notes(file):
 
 
 if __name__ == '__main__':
-    file_list = os.listdir('data')
+    folder = 'data'
+    file_list = os.listdir(folder)
+    file_list = [os.path.join(folder, x) for x in file_list]
 
     notes = []
     with Pool(processes=cpu_count()-1) as pool:
