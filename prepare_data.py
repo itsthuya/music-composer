@@ -30,8 +30,8 @@ if __name__ == '__main__':
     file_list = os.listdir(folder)
     file_list = [os.path.join(folder, x) for x in file_list]
 
-    if len(file_list) > cpu_count():
-        p_count = cpu_count()
+    if len(file_list) > cpu_count() - 1:
+        p_count = cpu_count() - 1
     else:
         p_count = len(file_list)
 
@@ -42,6 +42,5 @@ if __name__ == '__main__':
     for result in results:
         notes = notes + result
 
-    print(notes)
     with open('notes.pkl', 'wb') as f:
         pickle.dump(notes, f, protocol=pickle.HIGHEST_PROTOCOL)
