@@ -6,6 +6,7 @@ from multiprocessing import Pool, cpu_count
 
 
 def extract_notes(file):
+    notes = []
     midi = converter.parse(file)
     parts = instrument.partitionByInstrument(midi)
 
@@ -20,15 +21,22 @@ def extract_notes(file):
         elif isinstance(element, chord.Chord):
             notes.append('.'.join(str(n) for n in element.normalOrder))
 
+    print("Completed {}".format(file))
+    return notes
+
 
 if __name__ == '__main__':
     folder = 'data'
     file_list = os.listdir(folder)
     file_list = [os.path.join(folder, x) for x in file_list]
 
-    notes = []
-    with Pool(processes=cpu_count()-1) as pool:
-        pool.map(extract_notes, file_list)
+    with Pool(processes=1) as pool:
+        results = pool.map(extract_notes, file_list)
 
-    with open(os.path.join('data', 'notes.pickle'), 'wb') as f:
+    notes = []
+    for result in results:
+        notes = notes + result
+
+    print(notes)
+    with open('notes.pkl', 'wb') as f:
         pickle.dump(notes, f, protocol=pickle.HIGHEST_PROTOCOL)
