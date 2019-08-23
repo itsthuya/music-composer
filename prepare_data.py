@@ -30,7 +30,12 @@ if __name__ == '__main__':
     file_list = os.listdir(folder)
     file_list = [os.path.join(folder, x) for x in file_list]
 
-    with Pool(processes=1) as pool:
+    if len(file_list) > cpu_count():
+        p_count = cpu_count()
+    else:
+        p_count = len(file_list)
+
+    with Pool(processes=p_count) as pool:
         results = pool.map(extract_notes, file_list)
 
     notes = []
